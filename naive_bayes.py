@@ -1,18 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jun  6 11:13:06 2023
-
-@author: zhaoh
-"""
-
-
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Mar 16 23:54:23 2022
-
-@author: zhaoh
-"""
-
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -29,13 +14,7 @@ from sklearn.metrics import cohen_kappa_score
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import roc_curve, auc
 import pandas as pd
-'''
-    n_estimators=10：决策树的个数
-    max_features: 选择最适属性时划分的特征不能超过此值
-    predict(x)：直接给出预测结果。内部还是调用的predict_proba()，根据概率的结果看哪个类型的预测值最高就是哪个类型。  
-   
-'''   
-"""
+
 def read(file, sheet_index=0):
     
     workbook = xlrd.open_workbook(file)
@@ -54,27 +33,20 @@ def classify():
     
         
         
-    filename = 'C:/Users/zhaoh/Desktop/data/mood/mood2.csv'
+    filename = 'C:/mood.csv'
     data = pd.read_csv(filename,index_col=False)
-    col_name = list(data.columns)#获取所有列名
+    col_name = list(data.columns)
     
 
             
     x_col = col_name
-    col_drop=['id2','mood']#一些无意义的列，以及标签列'Churn?'
+    col_drop=['id','mood']
    
     for i in col_drop:
         x_col.remove(i)
             
      
     
-
-
-
-
-
-
-#读取数据
     acc=[]       
     X = data[x_col]
     y = data[['mood']]
@@ -83,7 +55,7 @@ def classify():
 
             
 
-#划分训练测试集
+
     x_train, x_test, y_train, y_test = train_test_split(X, y, train_size=0.8)
           
     gnb = GaussianNB()
@@ -91,7 +63,7 @@ def classify():
     y_true = y_test
     y_pred = pred_X
               
-    scores = cross_val_score(gnb,y_true, y_pred,cv=10,scoring='accuracy')
+    scores = cross_val_score(gnb,y_true, y_pred,cv=5,scoring='accuracy')
     
     
     print("accuracy "+"score： ",scores)
@@ -109,7 +81,7 @@ def classify():
     #print(acc)
   
  
-#计算Kappa值 
+
     
     kappa_value = cohen_kappa_score(y_true, y_pred)
 
@@ -129,8 +101,8 @@ def classify():
 
     
     
-    fpr,tpr,threshold = roc_curve(y_true, y_pred) ###计算真正率和假正率
-    roc_auc = auc(fpr,tpr) ###计算auc的值
+    fpr,tpr,threshold = roc_curve(y_true, y_pred) 
+    roc_auc = auc(fpr,tpr) 
     print("auc： ",roc_auc)
 
    
@@ -139,15 +111,7 @@ def classify():
 
        
 if __name__ == "__main__":       
-   """
-    x=read('x2.xlsx')   
-    np.save('x_data.npy',x)
-    np.savetxt('x_data.csv',x)
-    y=read('y2.xlsx')   
-    np.save('y_data.npy',y)
-    np.savetxt('y_data.csv',y)
-    print("save data -->")
-    """
+
    classify()
     
     
